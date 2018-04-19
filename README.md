@@ -1,2 +1,1 @@
-# flask_fontpicker
-A Flask extension for Jquery-ui google font picker
+# Flask-Fontpicker 0.1
