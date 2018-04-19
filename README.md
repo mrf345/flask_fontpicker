@@ -28,11 +28,11 @@ fontpicker(app)
 {% block scripts %}
   {{ super() }}
   {{ fontpicker.loader() }} {# to load jQuery-ui #}
-  {{ fontpicker.picker(id=".dp") }}
+  {{ fontpicker.picker(ids=["#dp"]) }}
 {% endblock %}
 {% block content %}
   <form class="verticalform">
-    <input type="text" class="form-control dp" />
+    <input type="text" id="dp" class="form-control" />
   </form>
 {% endblock %}
 ```
@@ -41,7 +41,7 @@ fontpicker(app)
 #### - Options:
 > The accepted arguments to be passed to the `fontpicker.picker()` function are as follow:
 ```python
-def picker(self, id=".fontpicker", # identifier will be passed to Jquery to select element
+def picker(self, ids=["#fontpicker"], # list of identifiers will be passed to Jquery to select element
                   families='["Droid Sans", "Roboto", "Roboto Condensed", "Signika"]',
                   # list of the font families to be displayed
                   loadAll='true', # to load all the selected fonts

@@ -98,7 +98,7 @@ class fontpicker(object):
                     toDo(self)
         return Markup(self.html)  # making sure html safe
 
-    def picker(self, id=".fontpicker",
+    def picker(self, ids=["#fontpicker"],
                families='["Droid Sans", "Roboto", "Roboto Condensed", "Signika"]',
                loadAll='true',
                defaultFont='',
@@ -107,8 +107,8 @@ class fontpicker(object):
         """
         fontpicker initializer, it produces a javascript code to load the plugin
         with passed arguments
-        @param: id the identifier which jquery will assign fontpickers to
-        (default '.fontpicker').
+        @param: ids list of identifiers which jquery will assign fontpickers to
+        (default ['#fontpicker']).
         @param: families list of the font families to be displayed
         (default: ["Droid Sans", "Roboto", "Roboto Condensed", "Signika"])
         @param: loadAll to load all the selected fonts
@@ -120,13 +120,16 @@ class fontpicker(object):
         @param: spaceChar spacing character used in local css file
         (default: '+').
         """
-        return Markup(" ".join(['<script>',
-                                '$(document).ready(function() {'
-                                '$("%s").wfselect({' % id,
-                                'fonts: { google: { families: %s,' % families,
-                                'url_generation: {base_url: "%s", space_char: "%s"}}},' % (urlCss, spaceChar),
-                                'load_all_fonts: %s,' % loadAll,
-                                'default_font_name: {type: "google", name: String($("%s").val())}' % id,
-                                '}).on("wfselectchange", function (event, fontInfo){',
-                                '$("%s").val(fontInfo["font-family"])}) })' % id,
-                                '</script>']))
+        toReturn = ""
+        for id in ids:
+            toReturn += " ".join(['<script>',
+            '$(document).ready(function() {'
+            '$("%s").wfselect({' % id,
+            'fonts: { google: { families: %s,' % families,
+            'url_generation: {base_url: "%s", space_char: "%s"}}},' % (urlCss, spaceChar),
+            'load_all_fonts: %s,' % loadAll,
+            'default_font_name: {type: "google", name: String($("%s").val())}' % id,
+            '}).on("wfselectchange", function (event, fontInfo){',
+            '$("%s").val(fontInfo["font-family"])}) })' % id,
+            '</script>', "\n"])
+        return Markup(toReturn)
