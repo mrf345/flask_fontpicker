@@ -109,15 +109,16 @@ class fontpicker(object):
         with passed arguments
         @param: id the identifier which jquery will assign fontpickers to
         (default '.fontpicker').
-        @param: families
-        @param: loadAll
-        (default '').
-        @param: defaultFont
+        @param: families list of the font families to be displayed
+        (default: ["Droid Sans", "Roboto", "Roboto Condensed", "Signika"])
+        @param: loadAll to load all the selected fonts
+        (default 'true').
+        @param: defaultFont default font to load at first
+        (default: 'Roboto').
+        @param: urlCss to load fonts with local css file
         (default: '').
-        @param: urlCss
-        (default: '').
-        @param: spaceChar
-        (default: '').
+        @param: spaceChar spacing character used in local css file
+        (default: '+').
         """
         return Markup(" ".join(['<script>',
                                 '$(document).ready(function() {'
