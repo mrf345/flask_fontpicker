@@ -15,6 +15,7 @@ class fontpicker(object):
         """
         self.app = app
         self.local = local
+        self.jqueryUI = jqueryUI
         if self.app is not None:
             self.init_app(app)
         else:
@@ -50,7 +51,7 @@ class fontpicker(object):
         """
         Function that allows to separate loading the plugin and its dependencies and initiating the JS plugin
         """
-        html = ""  # html tags will end-up here
+        self.html = ""  # html tags will end-up here
         if self.local == []:
             links = [
                 'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
@@ -78,17 +79,27 @@ class fontpicker(object):
             for link in links:
                 if not path.isfile(link):
                     raise(FileNotFoundError(
-                        "datepicker.loader() file not found "))
+                        "datepicker.loader() file not found " + link))
             togglePath(True)
-        for link in links:
+    
+        def toDo (self):
             if self.local == []:
-                html += '<script src="%s"></script>\n' % link if link.endswith('.js') else '<link href="%s" rel="stylesheet">\n' % link
+                self.html += '<script src="%s"></script>\n' % link if link.endswith('.js') else '<link href="%s" rel="stylesheet">\n' % link
             else:
-                html += '<script src="/%s"></script>\n' % link if link.endswith('.js') else '<link href="/%s" rel="stylesheet">\n' % link
-        return Markup(html)  # making sure html safe
+                self.html += '<script src="/%s"></script>\n' % link if link.endswith('.js') else '<link href="/%s" rel="stylesheet">\n' % link
+    
+        for link in links:
+            if self.jqueryUI:
+                toDo(self)
+            else:
+                try:
+                    link.index('jquery-ui')
+                except Exception:
+                    toDo(self)
+        return Markup(self.html)  # making sure html safe
 
     def picker(self, id=".fontpicker",
-               families='[]',
+               families='["Droid Sans", "Roboto", "Roboto Condensed", "Signika"]',
                loadAll='true',
                defaultFont='',
                urlCss='',
@@ -110,11 +121,11 @@ class fontpicker(object):
         """
         return Markup(" ".join(['<script>',
                                 '$(document).ready(function() {'
-                                '$("%s").datepicker({' % id,
+                                '$("%s").wfselect({' % id,
                                 'fonts: { google: { families: %s,' % families,
                                 'url_generation: {base_url: "%s", space_char: "%s"}}},' % (urlCss, spaceChar),
                                 'load_all_fonts: %s,' % loadAll,
-                                'default_font_name: {type: "google", name: String($("%s").val())}',
+                                'default_font_name: {type: "google", name: String($("%s").val())}' % id,
                                 '}).on("wfselectchange", function (event, fontInfo){',
                                 '$("%s").val(fontInfo["font-family"])}) })' % id,
                                 '</script>']))
